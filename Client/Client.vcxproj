@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{7dba434d-c0f5-4e91-9e2f-186e08bd77ea}</ProjectGuid>
+    <RootNamespace>Client</RootNamespace>
+    <ProjectName>Client</ProjectName>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <!-- 사용자 전체 vcpkg 연동이 끼어들지 않게 끈다 (라이브러리는 External/만 사용) -->
+    <VcpkgEnabled>false</VcpkgEnabled>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <!-- VS 2022 = v143, VS 2026 = v145. 어느 쪽으로 열어도 빌드되게 버전에 따라 고른다 -->
+  <PropertyGroup Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)' &gt;= '18.0'">v145</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'" Label="Configuration">
+    <UseDebugLibraries>true</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Release'" Label="Configuration">
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <RepoDir>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..'))\</RepoDir>
+    <ExternalDir>$(RepoDir)External\</ExternalDir>
+    <CommonDir>$(RepoDir)Common\</CommonDir>
+    <!-- 실행 파일은 저장소 루트의 x64\Debug (또는 Release)에 모인다 (나중에 Server.exe도 같은 곳) -->
+    <OutDir>$(RepoDir)x64\$(Configuration)\</OutDir>
+    <IntDir>$(RepoDir)x64\$(Configuration)\obj\$(ProjectName)\</IntDir>
+    <!-- F5 실행과 exe 직접 실행이 같은 폴더(셰이더·DLL 복사본)를 쓰게 한다 -->
+    <LocalDebuggerWorkingDirectory>$(OutDir)</LocalDebuggerWorkingDirectory>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(MSBuildProjectDirectory);$(CommonDir);$(ExternalDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CONSOLE;NOMINMAX;WIN32_LEAN_AND_MEAN;FREEGLUT_LIB_PRAGMAS=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(ExternalDir)lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>freeglut.lib;glew32.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
+    <ClCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
+    <ClCompile>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <!-- 빌드 후 DLL·셰이더·리소스를 실행 폴더로 복사.
+       cmd(xcopy)를 쓰면 경로의 한글이 깨져 명령이 망가지므로 MSBuild Copy 작업을 쓴다 -->
+  <Target Name="CopyRuntimeFiles" AfterTargets="Build">
+    <ItemGroup>
+      <RuntimeDll Include="$(ExternalDir)dll\*.dll" />
+      <ShaderFile Include="$(MSBuildProjectDirectory)\Shaders\**\*.*" />
+      <ResourceFile Include="$(MSBuildProjectDirectory)\Resources\**\*.*" Exclude="$(MSBuildProjectDirectory)\Resources\**\*.md" />
+    </ItemGroup>
+    <Copy SourceFiles="@(RuntimeDll)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(ShaderFile)" DestinationFiles="@(ShaderFile->'$(OutDir)Shaders\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(ResourceFile)" DestinationFiles="@(ResourceFile->'$(OutDir)Resources\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+  </Target>
+  <ItemGroup>
+    <ClCompile Include="..\Common\World.cpp" />
+    <ClCompile Include="Core\App.cpp" />
+    <ClCompile Include="Effects\DebrisSystem.cpp" />
+    <ClCompile Include="Input\InputManager.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Render\Camera.cpp" />
+    <ClCompile Include="Render\GunModel.cpp" />
+    <ClCompile Include="Render\Mesh.cpp" />
+    <ClCompile Include="Render\Renderer.cpp" />
+    <ClCompile Include="Render\Shader.cpp" />
+    <ClCompile Include="Render\Texture.cpp" />
+    <ClCompile Include="Scene\GameScene.cpp" />
+    <ClCompile Include="Scene\LobbyScene.cpp" />
+    <ClCompile Include="Scene\LoginScene.cpp" />
+    <ClCompile Include="Scene\ResultScene.cpp" />
+    <ClCompile Include="Scene\SceneCommon.cpp" />
+    <ClCompile Include="Scene\SceneManager.cpp" />
+    <ClCompile Include="Session\LocalSession.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Common\AimMath.h" />
+    <ClInclude Include="..\Common\GameConfig.h" />
+    <ClInclude Include="..\Common\GameTypes.h" />
+    <ClInclude Include="..\Common\World.h" />
+    <ClInclude Include="Core\App.h" />
+    <ClInclude Include="Core\Palette.h" />
+    <ClInclude Include="Core\Settings.h" />
+    <ClInclude Include="Effects\DebrisSystem.h" />
+    <ClInclude Include="Input\InputManager.h" />
+    <ClInclude Include="Render\Camera.h" />
+    <ClInclude Include="Render\GL.h" />
+    <ClInclude Include="Render\GunModel.h" />
+    <ClInclude Include="Render\Mesh.h" />
+    <ClInclude Include="Render\Renderer.h" />
+    <ClInclude Include="Render\Shader.h" />
+    <ClInclude Include="Render\Texture.h" />
+    <ClInclude Include="Scene\GameScene.h" />
+    <ClInclude Include="Scene\LobbyScene.h" />
+    <ClInclude Include="Scene\LoginScene.h" />
+    <ClInclude Include="Scene\ResultScene.h" />
+    <ClInclude Include="Scene\Scene.h" />
+    <ClInclude Include="Scene\SceneCommon.h" />
+    <ClInclude Include="Scene\SceneManager.h" />
+    <ClInclude Include="Session\LocalSession.h" />
+    <ClInclude Include="Session\Session.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\lit.frag" />
+    <None Include="Shaders\lit.vert" />
+    <None Include="Shaders\unlit.frag" />
+    <None Include="Shaders\unlit.vert" />
+    <None Include="Resources\README.md" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

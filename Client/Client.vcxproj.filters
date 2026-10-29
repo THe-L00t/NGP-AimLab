@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{a1d3c2f0-1b1e-4c5a-9a10-000000000001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{a1d3c2f0-1b1e-4c5a-9a10-000000000002}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effects">
+      <UniqueIdentifier>{a1d3c2f0-1b1e-4c5a-9a10-000000000003}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input">
+      <UniqueIdentifier>{a1d3c2f0-1b1e-4c5a-9a10-000000000004}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render">
+      <UniqueIdentifier>{a1d3c2f0-1b1e-4c5a-9a10-000000000005}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{a1d3c2f0-1b1e-4c5a-9a10-000000000006}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Session">
+      <UniqueIdentifier>{a1d3c2f0-1b1e-4c5a-9a10-000000000007}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{a1d3c2f0-1b1e-4c5a-9a10-000000000008}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{a1d3c2f0-1b1e-4c5a-9a10-000000000009}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Common\World.cpp"><Filter>Common</Filter></ClCompile>
+    <ClCompile Include="Core\App.cpp"><Filter>Core</Filter></ClCompile>
+    <ClCompile Include="main.cpp"><Filter>Core</Filter></ClCompile>
+    <ClCompile Include="Effects\DebrisSystem.cpp"><Filter>Effects</Filter></ClCompile>
+    <ClCompile Include="Input\InputManager.cpp"><Filter>Input</Filter></ClCompile>
+    <ClCompile Include="Render\Camera.cpp"><Filter>Render</Filter></ClCompile>
+    <ClCompile Include="Render\GunModel.cpp"><Filter>Render</Filter></ClCompile>
+    <ClCompile Include="Render\Mesh.cpp"><Filter>Render</Filter></ClCompile>
+    <ClCompile Include="Render\Renderer.cpp"><Filter>Render</Filter></ClCompile>
+    <ClCompile Include="Render\Shader.cpp"><Filter>Render</Filter></ClCompile>
+    <ClCompile Include="Render\Texture.cpp"><Filter>Render</Filter></ClCompile>
+    <ClCompile Include="Scene\GameScene.cpp"><Filter>Scene</Filter></ClCompile>
+    <ClCompile Include="Scene\LobbyScene.cpp"><Filter>Scene</Filter></ClCompile>
+    <ClCompile Include="Scene\LoginScene.cpp"><Filter>Scene</Filter></ClCompile>
+    <ClCompile Include="Scene\ResultScene.cpp"><Filter>Scene</Filter></ClCompile>
+    <ClCompile Include="Scene\SceneCommon.cpp"><Filter>Scene</Filter></ClCompile>
+    <ClCompile Include="Scene\SceneManager.cpp"><Filter>Scene</Filter></ClCompile>
+    <ClCompile Include="Session\LocalSession.cpp"><Filter>Session</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Common\AimMath.h"><Filter>Common</Filter></ClInclude>
+    <ClInclude Include="..\Common\GameConfig.h"><Filter>Common</Filter></ClInclude>
+    <ClInclude Include="..\Common\GameTypes.h"><Filter>Common</Filter></ClInclude>
+    <ClInclude Include="..\Common\World.h"><Filter>Common</Filter></ClInclude>
+    <ClInclude Include="Core\App.h"><Filter>Core</Filter></ClInclude>
+    <ClInclude Include="Core\Palette.h"><Filter>Core</Filter></ClInclude>
+    <ClInclude Include="Core\Settings.h"><Filter>Core</Filter></ClInclude>
+    <ClInclude Include="Effects\DebrisSystem.h"><Filter>Effects</Filter></ClInclude>
+    <ClInclude Include="Input\InputManager.h"><Filter>Input</Filter></ClInclude>
+    <ClInclude Include="Render\Camera.h"><Filter>Render</Filter></ClInclude>
+    <ClInclude Include="Render\GL.h"><Filter>Render</Filter></ClInclude>
+    <ClInclude Include="Render\GunModel.h"><Filter>Render</Filter></ClInclude>
+    <ClInclude Include="Render\Mesh.h"><Filter>Render</Filter></ClInclude>
+    <ClInclude Include="Render\Renderer.h"><Filter>Render</Filter></ClInclude>
+    <ClInclude Include="Render\Shader.h"><Filter>Render</Filter></ClInclude>
+    <ClInclude Include="Render\Texture.h"><Filter>Render</Filter></ClInclude>
+    <ClInclude Include="Scene\GameScene.h"><Filter>Scene</Filter></ClInclude>
+    <ClInclude Include="Scene\LobbyScene.h"><Filter>Scene</Filter></ClInclude>
+    <ClInclude Include="Scene\LoginScene.h"><Filter>Scene</Filter></ClInclude>
+    <ClInclude Include="Scene\ResultScene.h"><Filter>Scene</Filter></ClInclude>
+    <ClInclude Include="Scene\Scene.h"><Filter>Scene</Filter></ClInclude>
+    <ClInclude Include="Scene\SceneCommon.h"><Filter>Scene</Filter></ClInclude>
+    <ClInclude Include="Scene\SceneManager.h"><Filter>Scene</Filter></ClInclude>
+    <ClInclude Include="Session\LocalSession.h"><Filter>Session</Filter></ClInclude>
+    <ClInclude Include="Session\Session.h"><Filter>Session</Filter></ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\lit.frag"><Filter>Shaders</Filter></None>
+    <None Include="Shaders\lit.vert"><Filter>Shaders</Filter></None>
+    <None Include="Shaders\unlit.frag"><Filter>Shaders</Filter></None>
+    <None Include="Shaders\unlit.vert"><Filter>Shaders</Filter></None>
+    <None Include="Resources\README.md"><Filter>Resources</Filter></None>
+  </ItemGroup>
+</Project>
